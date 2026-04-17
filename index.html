@@ -71,7 +71,30 @@ h1 {
 
 <button type="submit">Submit Request</button>
 
-</form action="https://formspree.io/f/abcd1234" method="POST">
+</form <form action="https://formspree.io/f/xojydkqb" method="POST">
+
+  <input type="hidden" name="_subject" value="New K&A Logistics Order">
+
+  <input type="text" name="name" placeholder="Your Name" required>
+  <input type="tel" name="phone" placeholder="Phone Number" required>
+  <input type="text" name="pickup" placeholder="Pickup Location" required>
+  <input type="text" name="dropoff" placeholder="Drop-off Location" required>
+
+  <select name="zone" required>
+    <option value="">Select Delivery Zone</option>
+    <option value="Zone 1 - $30 Queens">Zone 1 - $30 (Queens)</option>
+    <option value="Zone 2 - $45 Brooklyn">Zone 2 - $45 (Brooklyn)</option>
+    <option value="Zone 3 - $50 Manhattan">Zone 3 - $50 (Manhattan)</option>
+    <option value="Zone 4 - $55 Bronx">Zone 4 - $55 (Bronx)</option>
+    <option value="Zone 5 - $60 SI">Zone 5 - $60 (Staten Island)</option>
+  </select>
+
+  <input type="text" name="details" placeholder="What do you need delivered?" required>
+
+  <button type="submit">Submit Request</button>
+
+</form>
+
 
 <p>Call: 516-989-7953</p>
 
