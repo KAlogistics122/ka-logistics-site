@@ -1,80 +1,155 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>K&A Logistics Services</title>
+<title>K&A Logistics Services</title>
 
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      background: url('https://images.unsplash.com/photo-1586528116311-addd3c8310d') no-repeat center center/cover;
-      color: white;
-      padding: 50px;
-    }
+<style>
+body {
+  font-family: Arial;
+  text-align: center;
+  background: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d') no-repeat center center/cover;
+  color: white;
+  padding: 20px;
+}
 
-    .container {
-      background: rgba(0,0,0,0.7);
-      padding: 20px;
-      border-radius: 10px;
-      display: inline-block;
-    }
+.container {
+  background: rgba(0,0,0,0.7);
+  padding: 20px;
+  border-radius: 10px;
+  display: inline-block;
+  width: 90%;
+  max-width: 400px;
+}
 
-    input, select {
-      width: 80%;
-      padding: 10px;
-      margin: 10px;
-      border-radius: 5px;
-      border: none;
-    }
+input, select {
+  width: 90%;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  border: none;
+}
 
-    button {
-      padding: 12px 25px;
-      background: gold;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-    }
+button {
+  padding: 12px 25px;
+  background: gold;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
 
-    h1 {
-      font-size: 32px;
-    }
-  </style>
+#priceDisplay {
+  font-size: 18px;
+  margin: 10px;
+  color: gold;
+}
+
+.dashboard {
+  margin-top: 30px;
+  background: rgba(0,0,0,0.8);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.order {
+  border-bottom: 1px solid #444;
+  padding: 10px;
+  text-align: left;
+}
+
+.status {
+  color: lightgreen;
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <h1>K&A Logistics Services</h1>
-  <h2>Fast Delivery at Your Doorstep</h2>
+<h2>K&A Logistics Services</h2>
+<p>Fast Delivery at Your Doorstep</p>
 
-  <form action="https://formspree.io/f/xojydkqb" method="POST">
+<form id="orderForm" action="https://formspree.io/f/xojydkqb" method="POST">
 
-    <input type="hidden" name="_subject" value="New K&A Logistics Order">
+<input type="text" name="name" placeholder="Your Name" required>
+<input type="text" name="phone" placeholder="Phone Number" required>
+<input type="text" name="pickup" placeholder="Pickup Location" required>
+<input type="text" name="dropoff" placeholder="Drop-off Location" required>
 
-    <input type="text" name="name" placeholder="Your Name" required>
-    <input type="tel" name="phone" placeholder="Phone Number" required>
-    <input type="text" name="pickup" placeholder="Pickup Location" required>
-    <input type="text" name="dropoff" placeholder="Drop-off Location" required>
+<select name="zone" id="zone" onchange="updatePrice()" required>
+<option value="">Select Delivery Zone</option>
+<option value="30">Zone 1 - Queens ($30)</option>
+<option value="45">Zone 2 - Brooklyn ($45)</option>
+<option value="50">Zone 3 - Manhattan ($50)</option>
+<option value="55">Zone 4 - Bronx ($55)</option>
+<option value="60">Zone 5 - Staten Island ($60)</option>
+</select>
 
-    <select name="zone" required>
-      <option value="">Select Delivery Zone</option>
-      <option value="Zone 1 - $30 Queens">Zone 1 - $30 (Queens)</option>
-      <option value="Zone 2 - $45 Brooklyn">Zone 2 - $45 (Brooklyn)</option>
-      <option value="Zone 3 - $50 Manhattan">Zone 3 - $50 (Manhattan)</option>
-      <option value="Zone 4 - $55 Bronx">Zone 4 - $55 (Bronx)</option>
-      <option value="Zone 5 - $60 Staten Island">Zone 5 - $60 (Staten Island)</option>
-    </select>
+<div id="priceDisplay">Price: $0</div>
 
-    <input type="text" name="details" placeholder="What do you need delivered?" required>
+<input type="hidden" name="price" id="priceInput">
 
-    <button type="submit">Submit Request</button>
+<input type="text" name="details" placeholder="What do you need delivered?" required>
 
-  </form>
+<button type="submit">Submit Request</button>
 
-  <p>Call: 516-989-7953</p>
+</form>
 
 </div>
+
+<!-- DASHBOARD -->
+<div class="dashboard">
+<h3>📦 Live Orders</h3>
+<div id="ordersList"></div>
+</div>
+
+<script>
+
+// PRICE CALCULATOR
+function updatePrice() {
+  let price = document.getElementById("zone").value;
+  document.getElementById("priceDisplay").innerText = "Price: $" + price;
+  document.getElementById("priceInput").value = price;
+}
+
+// LOCAL DASHBOARD STORAGE
+document.getElementById("orderForm").addEventListener("submit", function() {
+
+  let order = {
+    name: document.querySelector('[name="name"]').value,
+    pickup: document.querySelector('[name="pickup"]').value,
+    dropoff: document.querySelector('[name="dropoff"]').value,
+    price: document.getElementById("priceInput").value,
+    status: "Pending"
+  };
+
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  orders.push(order);
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+});
+
+// DISPLAY ORDERS
+function loadOrders() {
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+  let list = document.getElementById("ordersList");
+  list.innerHTML = "";
+
+  orders.forEach((o, index) => {
+    list.innerHTML += `
+      <div class="order">
+        <b>${o.name}</b><br>
+        ${o.pickup} → ${o.dropoff}<br>
+        💲${o.price}<br>
+        <span class="status">${o.status}</span>
+      </div>
+    `;
+  });
+}
+
+loadOrders();
+
+</script>
 
 </body>
 </html>
