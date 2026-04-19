@@ -1,1 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K&A Logistics Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
 
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .topbar {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background: gold;
+      color: black;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 4px;
+    }
+
+    .orders {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #1f2937;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .row {
+      margin: 6px 0;
+    }
+
+    .label {
+      color: #9ca3af;
+      font-weight: bold;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .Pending { background: #f59e0b; color: black; }
+    .PickedUp { background: #3b82f6; color: white; }
+    .Delivered { background: #10b981; color: white; }
+
+    .actions {
+      margin-top: 12px;
+    }
+
+    .empty {
+      text-align: center;
+      color: #9ca3af;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>K&A Logistics Dashboard</h1>
+
+  <div class="topbar">
+    <button onclick="loadOrders()">Refresh Orders</button>
+  </div>
+
+  <div class="orders" id="ordersList">
+    <div class="empty">Loading orders...</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://zkupeegvdnuohgygrdji.supabase.co";
+    const SUPABASE_KEY = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function loadOrders() {
+      const ordersList = document.getElementById("ordersList");
+      ordersList.innerHTML = '<div class="empty">Loading orders...</div>';
+
+      const { data, error } = await supabaseClient
+        .from("Orders")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        ordersList.innerHTML = '<div class="empty">Error loading orders.</div>';
+        console.log(error);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        ordersList.innerHTML = '<div class="empty">No orders yet.</div>';
+        return;
+      }
+
+      ordersList.innerHTML = "";
+
+      data.forEach(order => {
+        const statusClass = (order.Status || "Pending").replace(/\s+/g, "");
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+          <div class="row"><span class="label">Name:</span> ${order.Name || ""}</div>
+          <div class="row"><span class="label">Phone:</span> ${order.Phone || ""}</div>
+          <div class="row"><span class="label">Pickup:</span> ${order.Pickup || ""}</div>
+          <div class="row"><span class="label">Drop-off:</span> ${order["Drop-off"] || ""}</div>
+          <div class="row"><span class="label">Zone:</span> ${order.Zone || ""}</div>
+          <div class="row"><span class="label">Price:</span> ${order.Price || ""}</div>
+          <div class="row"><span class="label">Details:</span> ${order.Details || ""}</div>
+          <div class="status ${statusClass}">${order.Status || "Pending"}</div>
+
+          <div class="actions">
+            <button onclick="updateStatus(${order.id}, 'Pending')">Pending</button>
+            <button onclick="updateStatus(${order.id}, 'PickedUp')">Picked Up</button>
+            <button onclick="updateStatus(${order.id}, 'Delivered')">Delivered</button>
+          </div>
+        `;
+
+        ordersList.appendChild(card);
+      });
+    }
+
+    async function updateStatus(id, newStatus) {
+      const { error } = await supabaseClient
+        .from("Orders")
+        .update({ Status: newStatus })
+        .eq("id", id);
+
+      if (error) {
+        alert("Could not update status");
+        console.log(error);
+        return;
+      }
+
+      loadOrders();
+    }
+
+    loadOrders();
+  </script>
+</body>
+</html>
