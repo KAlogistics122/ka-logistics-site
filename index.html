@@ -1,146 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>K&A Logistics Services</title>
-
   <style>
     body {
-      font-family: Arial;
+      font-family: Arial, sans-serif;
       text-align: center;
       background: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d') no-repeat center center/cover;
       color: white;
-      padding: 40px;
+      padding: 40px 15px;
+      margin: 0;
     }
 
     .container {
-      background: rgba(0,0,0,0.7);
+      background: rgba(0, 0, 0, 0.72);
       padding: 20px;
-      border-radius: 10px;
+      border-radius: 12px;
       display: inline-block;
+      width: 92%;
+      max-width: 430px;
+      box-sizing: border-box;
     }
 
-    input, select {
-      width: 80%;
-      padding: 10px;
-      margin: 10px;
-      border-radius: 5px;
-      border: none;
+    h1 {
+      margin-bottom: 8px;
+      font-size: 32px;
     }
 
+    h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    input,
+    select,
     button {
-      padding: 12px 25px;
-      background: gold;
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
       border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    input,
+    select {
+      background: #fff;
+      color: #000;
     }
 
     input[readonly] {
       background: #eee;
       font-weight: bold;
     }
+
+    button {
+      background: gold;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .note {
+      margin-top: 14px;
+      font-size: 16px;
+    }
   </style>
 </head>
-
 <body>
+  <div class="container">
+    <h1>K&A Logistics Services</h1>
+    <h2>Fast Delivery at Your Doorstep</h2>
 
-<div class="container">
-  <h1>K&A Logistics Services</h1>
-  <h2>Fast Delivery at Your Doorstep</h2>
+    <form id="orderForm" action="https://formspree.io/f/xojydkqb" method="POST">
+      <input type="hidden" name="_subject" value="New K&A Logistics Order" />
 
-  <form id="orderForm" action="https://formspree.io/f/xojydkqb" method="POST">
+      <input type="text" name="name" placeholder="Your Name" required />
+      <input type="text" name="phone" placeholder="Phone Number" required />
+      <input type="text" name="pickup" placeholder="Pickup Location" required />
+      <input type="text" name="dropoff" placeholder="Drop-off Location" required />
 
-    <input type="hidden" name="_subject" value="New K&A Logistics Order">
+      <select name="zone" id="zone" required onchange="setPrice()">
+        <option value="">Select Delivery Zone</option>
+        <option value="30|Zone 1 - Queens">Zone 1 - $30 (Queens)</option>
+        <option value="45|Zone 2 - Brooklyn">Zone 2 - $45 (Brooklyn)</option>
+        <option value="50|Zone 3 - Manhattan">Zone 3 - $50 (Manhattan)</option>
+        <option value="55|Zone 4 - Bronx">Zone 4 - $55 (Bronx)</option>
+        <option value="60|Zone 5 - Staten Island">Zone 5 - $60 (Staten Island)</option>
+      </select>
 
-    <input type="text" name="name" placeholder="Your Name" required>
-    <input type="text" name="phone" placeholder="Phone Number" required>
-    <input type="text" name="pickup" placeholder="Pickup Location" required>
-    <input type="text" name="dropoff" placeholder="Drop-off Location" required>
+      <input type="text" id="price" name="price" placeholder="Price" readonly required />
+      <input type="text" name="details" placeholder="What do you need delivered?" required />
 
-    <select name="zone" id="zone" required onchange="setPrice()">
-      <option value="">Select Delivery Zone</option>
-      <option value="30|Zone 1 - Queens">Zone 1 - $30 (Queens)</option>
-      <option value="45|Zone 2 - Brooklyn">Zone 2 - $45 (Brooklyn)</option>
-      <option value="50|Zone 3 - Manhattan">Zone 3 - $50 (Manhattan)</option>
-      <option value="55|Zone 4 - Bronx">Zone 4 - $55 (Bronx)</option>
-      <option value="60|Zone 5 - Staten Island">Zone 5 - $60 (Staten Island)</option>
-    </select>
+      <button type="submit">Submit Request</button>
+    </form>
 
-    <input type="text" id="price" name="price" placeholder="Price" readonly required>
+    <p class="note">Call: 516-989-7953</p>
+  </div>
 
-    <input type="text" name="details" placeholder="What do you need delivered?" required>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    function setPrice() {
+      const zoneValue = document.getElementById("zone").value;
+      const priceField = document.getElementById("price");
 
-    <button type="submit">Submit Request</button>
-
-  </form>
-
-  <p>Call: 516-989-7953</p>
-</div>
-
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-function setPrice() {
-  const zoneValue = document.getElementById("zone").value;
-  const priceField = document.getElementById("price");
-
-  if (!zoneValue) {
-    priceField.value = "";
-    return;
-  }
-
-  const parts = zoneValue.split("|");
-  const price = parts[0];
-  priceField.value = "$" + price;
-}
-
-// 🔑 YOUR CONNECTION
-const SUPABASE_URL = "https://zkupeegvdnuohgygrdji.supabase.co";
-const SUPABASE_KEY = const SUPABASE_KEY = "sb_publishable_XXXXXX";
-
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// ✅ FIXED SUBMIT HANDLER (this was missing/broken before)
-document.getElementById("orderForm").addEventListener("submit", async function (e) {
-
-  e.preventDefault(); // IMPORTANT
-
-  try {
-    const formData = new FormData(this);
-    const zoneValue = formData.get("zone") || "";
-    const zoneParts = zoneValue.split("|");
-
-    const priceOnly = zoneParts[0] ? "$" + zoneParts[0] : "";
-    const zoneLabel = zoneParts[1] || "";
-
-    await supabaseClient.from("Orders").insert([
-      {
-        Name: formData.get("name"),
-        Phone: formData.get("phone"),
-        Pickup: formData.get("pickup"),
-        "Drop-off": formData.get("dropoff"),
-        Zone: zoneLabel,
-        Price: priceOnly,
-        Details: formData.get("details"),
-        Status: "Pending"
+      if (!zoneValue) {
+        priceField.value = "";
+        return;
       }
-    ]);
 
-  } catch (error) {
-    console.log("Supabase error:", error);
-  }
+      const parts = zoneValue.split("|");
+      priceField.value = "$" + parts[0];
+    }
 
-  // ✅ send to Formspree AFTER saving
-  this.submit();
+    const SUPABASE_URL = "https://zkupeegvdnuohgygrdji.supabase.co";
+    const SUPABASE_KEY = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
 
-});
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-</script>
+    document.getElementById("orderForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
 
+      try {
+        const formData = new FormData(this);
+        const zoneValue = formData.get("zone") || "";
+        const zoneParts = zoneValue.split("|");
+
+        const priceOnly = zoneParts[0] ? "$" + zoneParts[0] : "";
+        const zoneLabel = zoneParts[1] || "";
+
+        await supabaseClient.from("orders").insert([
+          {
+            Name: formData.get("name"),
+            Phone: formData.get("phone"),
+            Pickup: formData.get("pickup"),
+            "Drop-off": formData.get("dropoff"),
+            Zone: zoneLabel,
+            Price: priceOnly,
+            Details: formData.get("details"),
+            Status: "Pending"
+          }
+        ]);
+      } catch (error) {
+        console.log("Supabase save failed:", error);
+      }
+
+      this.submit();
+    });
+  </script>
 </body>
 </html>
