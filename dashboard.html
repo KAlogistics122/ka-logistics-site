@@ -106,12 +106,12 @@
         .from("Orders")
         .select("*")
         .order("created_at", { ascending: false });
-
-      if (error) {
-        ordersList.innerHTML = '<div class="empty">Error loading orders.</div>';
-        console.log(error);
-        return;
-      }
+      
+        if (error) {
+          ordersList.innerHTML = '<div class="empty">Error loading orders: ' + (error.message || JSON.stringify(error)) + '</div>';
+          console.log(error);
+          return;
+        }
 
       if (!data || data.length === 0) {
         ordersList.innerHTML = '<div class="empty">No orders yet.</div>';
