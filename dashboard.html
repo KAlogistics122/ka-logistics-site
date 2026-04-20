@@ -84,7 +84,7 @@
   <h1>K&A Logistics Dashboard</h1>
 
   <div class="topbar">
-    <button onclick="loadorders()">Refresh Orders</button>
+    <button onclick="loadorders()">Refresh orders</button>
   </div>
 
   <div class="orders" id="ordersList">
@@ -103,7 +103,7 @@
       ordersList.innerHTML = '<div class="empty">Loading orders...</div>';
 
       const { data, error } = await supabaseClient
-        .from("Orders")
+        .from("orders")
         .select("*")
         .order("created_at", { ascending: false });
       
@@ -149,7 +149,7 @@
 
     async function updateStatus(id, newStatus) {
       const { error } = await supabaseClient
-        .from("Orders")
+        .from("orders")
         .update({ Status: newStatus })
         .eq("id", id);
 
@@ -159,10 +159,10 @@
         return;
       }
 
-      loadOrders();
+      loadorders();
     }
 
-    loadOrders();
+    loadorders();
   </script>
 </body>
 </html>
