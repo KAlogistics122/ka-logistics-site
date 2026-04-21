@@ -133,7 +133,7 @@
           <div class="row"><span class="label">Zone:</span> ${order.Zone || ""}</div>
           <div class="row"><span class="label">Price:</span> ${order.Price || ""}</div>
           <div class="row"><span class="label">Details:</span> ${order.Details || ""}</div>
-          <div class="status ${statusClass}">${order.Status || "Pending"}</div>
+          <div class="status ${statusClass}">${Order.Status || "Pending"}</div>
 
           <div class="actions">
             <button onclick="updateStatus(${order.id}, 'Pending')">Pending</button>
@@ -158,10 +158,10 @@
         return;
       }
 
-      loadOrders();
+      loadorders();
     }
 
-    loadOrders();
+    loadorders();
   </script>
 </body>
 </html>
