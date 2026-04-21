@@ -102,7 +102,7 @@
       ordersList.innerHTML = '<div class="empty">Loading orders...</div>';
 
       const { data, error } = await supabaseClient
-        .from("orders")
+        .from("Orders")
         .select("*")
         .order("created_at", { ascending: false });
       
