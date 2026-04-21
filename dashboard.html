@@ -84,11 +84,11 @@
   <h1>K&A Logistics Dashboard-test</h1>
 
   <div class="topbar">
-    <button onclick="loadOrders()">Refresh Orders</button>
+    <button onclick="loadorders()">Refresh orders</button>
   </div>
 
-  <div class="Orders" id="OrdersList">
-    <div class="empty">Loading Orders...</div>
+  <div class="orders" id="ordersList">
+    <div class="empty">Loading orders...</div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -102,7 +102,7 @@
       ordersList.innerHTML = '<div class="empty">Loading Orders...</div>';
 
       const { data, error } = await supabaseClient
-        .from("Orders")
+        .from("orders")
         .select("*")
         .order("created_at", { ascending: false });
       
@@ -158,10 +158,10 @@
         return;
       }
 
-      loadOrders();
+      loadprders();
     }
 
-    loadOrders();
+    loadorders();
   </script>
 </body>
 </html>
