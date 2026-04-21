@@ -99,7 +99,7 @@
 
     async function loadOrders() {
       const ordersList = document.getElementById("ordersList");
-      ordersList.innerHTML = '<div class="empty">Loading Orders...</div>';
+      ordersList.innerHTML = '<div class="empty">Loading orders...</div>';
 
       const { data, error } = await supabaseClient
         .from("orders")
