@@ -97,7 +97,7 @@
     const SUPABASE_KEY = "sb_publishable_xRMENecyJmxbaSnjSwKGPw_Nl1y9_Ui";
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function loadorders() {
+    async function loadOrders() {
       const ordersList = document.getElementById("ordersList");
       ordersList.innerHTML = '<div class="empty">Loading orders...</div>';
 
@@ -107,13 +107,13 @@
         .order("created_at", { ascending: false });
       
         if (error) {
-          OrdersList.innerHTML = '<div class="empty">Error loading orders: ' + (error.message || JSON.stringify(error)) + '</div>';
+          ordersList.innerHTML = '<div class="empty">Error loading orders: ' + (error.message || JSON.stringify(error)) + '</div>';
           console.log(error);
           return;
         }
 
       if (!data || data.length === 0) {
-        OrdersList.innerHTML = '<div class="empty">No orders yet.</div>';
+        ordersList.innerHTML = '<div class="empty">No orders yet.</div>';
         return;
       }
 
