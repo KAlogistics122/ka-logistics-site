@@ -97,7 +97,7 @@
     const SUPABASE_KEY = "sb_publishable_xRMENecyJmxbaSnjSwKGPw_Nl1y9_Ui";
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    async function loadorders() {
+    async function loadOrders() {
       const ordersList = document.getElementById("ordersList");
       ordersList.innerHTML = '<div class="empty">Loading Orders...</div>';
 
@@ -158,10 +158,10 @@
         return;
       }
 
-      loadorders();
+      loadOrders();
     }
 
-    loadorders();
+    loadOrders();
   </script>
 </body>
 </html>
