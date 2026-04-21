@@ -107,7 +107,7 @@
         .order("created_at", { ascending: false });
       
         if (error) {
-          ordersList.innerHTML = '<div class="empty">Error loading orders: ' + (error.message || JSON.stringify(error)) + '</div>';
+          OrdersList.innerHTML = '<div class="empty">Error loading orders: ' + (error.message || JSON.stringify(error)) + '</div>';
           console.log(error);
           return;
         }
