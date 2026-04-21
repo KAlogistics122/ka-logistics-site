@@ -148,7 +148,7 @@
 
     async function updateStatus(id, newStatus) {
       const { error } = await supabaseClient
-        .from("Orders")
+        .from("orders")
         .update({ Status: newStatus })
         .eq("id", id);
 
@@ -161,7 +161,7 @@
       loadorders();
     }
 
-    loadOrders();
+    loadorders();
   </script>
 </body>
 </html>
